@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static de.hammerhartes.andy.breakerbox.stream.Collectors.toImmutableList;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -57,7 +58,7 @@ public class DockerDiscovery implements InstanceDiscovery {
         for (final URI dockerHost : dockerHosts) {
             final List<Container> containers = new GetContainersCommand(client, dockerHost).execute();
             LOG.info("Found {} containers", containers.size());
-            containers.stream()
+            final List<Instance> dockerInstances = containers.stream()
                     .filter(container -> container.getPorts().size() == 1
                                          && container.getPorts().get(0).getPublicPort() > 0)
                     .map(container -> {
@@ -68,7 +69,9 @@ public class DockerDiscovery implements InstanceDiscovery {
                         return hostAndPort;
                     })
                     .filter(this::isTenacityService)
-                    .forEach((hostAndPort) -> instances.add(new Instance(hostAndPort.toString(), clusterName, true)));
+                    .map((hostAndPort) -> new Instance(hostAndPort.toString(), clusterName, true))
+                    .collect(toImmutableList());
+            instances.addAll(dockerInstances);
         }
         return instances.build();
     }
