@@ -1,6 +1,6 @@
 # Docker instance discovery for breakerbox #
 
-Like synapse, but for breakerbox.
+Like synapse, but for [breakerbox](https://github.com/yammer/breakerbox).
 
 
 ## Installation ##
