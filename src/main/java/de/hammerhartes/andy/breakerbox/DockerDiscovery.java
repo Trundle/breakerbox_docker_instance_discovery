@@ -17,6 +17,7 @@ import de.hammerhartes.andy.breakerbox.model.Container;
 import de.hammerhartes.andy.breakerbox.model.Port;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,7 @@ import java.util.stream.Stream;
 import static de.hammerhartes.andy.breakerbox.stream.Collectors.toImmutableList;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
+import static org.joda.time.Seconds.secondsBetween;
 
 public class DockerDiscovery implements InstanceDiscovery {
 
@@ -58,9 +60,12 @@ public class DockerDiscovery implements InstanceDiscovery {
         for (final URI dockerHost : dockerHosts) {
             final List<Container> containers = new GetContainersCommand(client, dockerHost).execute();
             LOG.info("Found {} containers", containers.size());
+            final DateTime now = DateTime.now();
             final List<Instance> dockerInstances = containers.stream()
                     .filter(container -> container.getPorts().size() == 1
-                                         && container.getPorts().get(0).getPublicPort() > 0)
+                                         && container.getPorts().get(0).getPublicPort() > 0
+                                         // Give services 60 seconds to start
+                                         && secondsBetween(container.getCreated(), now).getSeconds() > 60)
                     .map(container -> {
                         final Port port = container.getPorts().get(0);
                         final HostAndPort hostAndPort =
