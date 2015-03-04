@@ -54,4 +54,13 @@ public class CheckForTenacityProperties extends HystrixCommand<Boolean> {
             return false;
         }
     }
+
+    @Override
+    protected Boolean getFallback() {
+        if (isResponseTimedOut()) {
+            LOG.warn("Timeout while trying to check for tenacity properties at " + hostAndPort.toString());
+            return false;
+        }
+        return super.getFallback();
+    }
 }

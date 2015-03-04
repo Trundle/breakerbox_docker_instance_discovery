@@ -82,7 +82,11 @@ public class DockerDiscovery implements InstanceDiscovery {
             LOG.debug("{} seems like a tenacity service: {}", hostAndPort, providesMetricsStream);
             return providesMetricsStream;
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            final String exceptionName = e.getCause().getClass().getSimpleName();
+            LOG.warn(exceptionName + " while trying to check for tenacity properties at "
+                     + hostAndPort.toString(),
+                     e.getCause());
+            return false;
         }
     }
 
