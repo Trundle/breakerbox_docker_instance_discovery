@@ -9,7 +9,6 @@ import com.google.common.net.HostAndPort;
 import com.netflix.config.ConfigurationManager;
 import com.netflix.turbine.discovery.Instance;
 import com.netflix.turbine.discovery.InstanceDiscovery;
-import com.sun.jersey.api.client.Client;
 
 import de.hammerhartes.andy.breakerbox.command.CheckForTenacityProperties;
 import de.hammerhartes.andy.breakerbox.command.GetContainersCommand;
@@ -17,6 +16,7 @@ import de.hammerhartes.andy.breakerbox.model.Container;
 import de.hammerhartes.andy.breakerbox.model.Port;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+
+import javax.ws.rs.client.Client;
 
 import static de.hammerhartes.andy.breakerbox.stream.Collectors.toImmutableList;
 import static java.lang.String.format;
@@ -46,7 +48,7 @@ public class DockerDiscovery implements InstanceDiscovery {
     private final List<Instance> staticInstances;
 
     public DockerDiscovery() {
-        client = Client.create();
+        client = new JerseyClientBuilder().build();
         dockerHosts = getDockerHosts();
         clusterName = getClusterName();
         tenacityCheckCache = createCache(client);

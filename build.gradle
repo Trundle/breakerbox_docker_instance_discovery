@@ -20,10 +20,9 @@ repositories {
 
 dependencies {
     // Note: dependencies must not conflict with breakerbox's dependencies!
-    compile 'com.netflix.hystrix:hystrix-core:1.3.9'
-    compile 'com.netflix.rxnetty:rx-netty:0.3.16'
+    compile 'com.netflix.hystrix:hystrix-core:1.4.21'
     compile 'com.netflix.turbine:turbine-core:1.0.0'
-    compile 'io.dropwizard:dropwizard-client:0.7.1'
+    compile 'io.dropwizard:dropwizard-client:0.9.1'
 }
 
 

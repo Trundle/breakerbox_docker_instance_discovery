@@ -4,15 +4,14 @@ import com.google.common.net.HostAndPort;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -44,11 +43,11 @@ public class CheckForTenacityProperties extends HystrixCommand<Boolean> {
         final URI metricsStream = new URI("http", null, hostAndPort.getHostText(), hostAndPort.getPort(),
                                           metricsPath, null, null);
         try {
-            final ClientResponse response = client.resource(metricsStream).head();
+            final Response response = client.target(metricsStream).request().head();
             response.close();
-            return response.getStatus() == Response.Status.OK.getStatusCode();
-        } catch (ClientHandlerException e) {
-            LOG.warn("ClientHandlerException while trying to check for tenacity properties at "
+            return response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL;
+        } catch (ProcessingException e) {
+            LOG.warn("ProcessingException while trying to check for tenacity properties at "
                      + hostAndPort.toString(),
                      e);
             return false;

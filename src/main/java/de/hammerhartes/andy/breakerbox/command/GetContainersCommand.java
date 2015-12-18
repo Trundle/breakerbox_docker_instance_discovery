@@ -2,14 +2,14 @@ package de.hammerhartes.andy.breakerbox.command;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.GenericType;
 
 import de.hammerhartes.andy.breakerbox.model.Container;
 
 import java.net.URI;
 import java.util.List;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,8 +30,8 @@ public class GetContainersCommand extends HystrixCommand<List<Container>> {
 
     @Override
     protected List<Container> run() {
-        return client.resource(dockerHost.resolve("/containers/json"))
-                .accept(MediaType.APPLICATION_JSON_TYPE)
+        return client.target(dockerHost.resolve("/containers/json"))
+                .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(new GenericType<List<Container>>() {});
     }
 }
