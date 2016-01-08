@@ -14,3 +14,8 @@ Like synapse, but for [breakerbox](https://github.com/yammer/breakerbox).
    `docker.hosts=http://localhost:2375`
 
 3. Add `build/libs/docker_discovery.jar` to breakerbox's classpath. 
+
+
+## License ##
+
+MIT/Expat. See `LICENSE` for details.
