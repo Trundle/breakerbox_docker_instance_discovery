@@ -23,6 +23,8 @@ dependencies {
     compile 'com.netflix.hystrix:hystrix-core:1.4.21'
     compile 'com.netflix.turbine:turbine-core:1.0.0'
     compile 'io.dropwizard:dropwizard-client:0.9.1'
+
+    testCompile 'junit:junit:4.12'
 }
 
 
