@@ -30,6 +30,7 @@ public class DockerDiscoveryTest {
                     {"hub.example.org/debian:7.0", "debian"},
                     {"hub.example.org/org/spam:latest", "org/spam"},
                     {"hub.example.org/org/spam:123", "org/spam"},
+                    {"hub.example.org:1234/org/spam:123", "org/spam"},
                     });
         }
 
